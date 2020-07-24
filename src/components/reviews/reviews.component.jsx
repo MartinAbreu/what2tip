@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import Rating from "@material-ui/lab/Rating";
 import Collapsible from "react-collapsible";
 import Carousel from "@brainhubeu/react-carousel";
-import "@brainhubeu/react-carousel/lib/style.css";
 import Autocomplete from "react-google-autocomplete";
+import "@brainhubeu/react-carousel/lib/style.css";
 
 import firebaseDB from "../../utils/firebase/firebase";
+
+const API_KEY = process.env.REACT_APP_API_KEY;
 
 const ReviewCard = () => {
   var [searchVal, setSearchVal] = useState("");
@@ -101,7 +103,7 @@ const ReviewCard = () => {
             autoComplete="off"
           >
             <Autocomplete
-              apiKey={"AIzaSyASQYSS3mUiVqNhwYaKTwflC7OFwEqgQRU"}
+              apiKey={API_KEY}
               name="restaurant"
               value={review.restaurant}
               onChange={(e) =>
