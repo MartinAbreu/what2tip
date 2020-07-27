@@ -27,6 +27,7 @@ function App() {
       </Header>
       <CalculateTip ratingSent={handleRating} />
       <ReviewCard getRating={tipRating} />
+      <footer>Developed by Martin Abreu</footer>
     </div>
   );
 }

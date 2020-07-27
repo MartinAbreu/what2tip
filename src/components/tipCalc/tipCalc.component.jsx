@@ -8,6 +8,21 @@ const CalculateTip = ({ ratingSent }) => {
   var [tipPerc, setTipPerc] = useState("");
   var [tip, setTip] = useState("");
 
+  const CONTAINER_STYLE = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    height: "100%",
+    justifyContent: "space-around",
+    textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
+  };
+
+  const SEGMENT_STYLE = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  };
+
   useEffect(() => {
     switch (true) {
       case rating === 1:
@@ -37,24 +52,14 @@ const CalculateTip = ({ ratingSent }) => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100%",
-        justifyContent: "space-evenly",
-        textShadow: "2px 4px 3px rgba(0, 0, 0, 0.3)",
-      }}
-    >
-      <span style={{ fontSize: "6rem", marginBottom: "1rem" }}>
-        <CountUp end={Math.round(tip)} prefix="$" />
-      </span>
-      <span>
+    <div style={CONTAINER_STYLE}>
+      <CountUp end={Math.round(tip)} prefix="$" style={{ fontSize: "6rem" }} />
+
+      <span style={{ marginTop: "10px" }}>
         Recommended Tip <em>({tipPerc * 100}%)</em>
       </span>
 
-      <Segment basic style={{ display: "flex", flexDirection: "column" }}>
+      <Segment basic style={SEGMENT_STYLE}>
         <Input
           labelPosition="right"
           type="number"
@@ -64,6 +69,7 @@ const CalculateTip = ({ ratingSent }) => {
             setAmount(Math.round(e.target.value.slice(0, e.target.maxLength)))
           }
           maxLength="6"
+          style={{ textShadow: "1px 1px 3px rgba(0, 0, 0, 0.3)" }}
         >
           <Label basic>$</Label>
           <input />

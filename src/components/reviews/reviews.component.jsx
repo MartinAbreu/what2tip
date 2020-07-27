@@ -3,18 +3,53 @@ import Autocomplete from "react-google-autocomplete";
 import "@brainhubeu/react-carousel/lib/style.css";
 import ReactCardCarousel from "react-card-carousel";
 
-import { Button, Form, Modal, Icon, Rating, Card } from "semantic-ui-react";
+import {
+  Button,
+  Form,
+  Modal,
+  Icon,
+  Rating,
+  Card,
+  Label,
+} from "semantic-ui-react";
 
 import firebaseDB from "../../utils/firebase/firebase";
+import { Input } from "@material-ui/core";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 const ReviewCard = () => {
+  //Hooks
   var [searchVal, setSearchVal] = useState("");
   var [restaurant, setRestaurant] = useState("");
   var [getReview, setGetReview] = useState({});
   var [modalOpen, setModalOpen] = useState(false);
   var [showCar, setShowCar] = useState(false);
+  var [charLeft, setCharLeft] = useState(150);
+
+  //Some styling
+  const CONTAINER_STYLE = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  };
+
+  const CAROUSEL_STYLE = {
+    display: "flex",
+    flexDirection: "column",
+    position: "relative",
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  };
+
+  const CARD_STYLE = {
+    width: "20rem",
+    height: "10rem",
+    fontSize: "1rem",
+    background: "rgb(235, 235, 235)",
+  };
 
   useEffect(() => {
     if (searchVal !== "") {
@@ -27,7 +62,9 @@ const ReviewCard = () => {
             setGetReview({
               ...snapshot.val(),
             });
+            //Display carousel
             setShowCar(true);
+            setSearchVal("");
             console.log(snapshot);
           } else {
             setGetReview({});
@@ -44,16 +81,17 @@ const ReviewCard = () => {
   };
   var [review, setReview] = useState(reviewValues);
 
+  //Handle form inputs
   const handleInputsVals = (e) => {
     var { name, value } = e.target;
-
     setReview({
       ...review,
       [name]: `${value}`,
     });
   };
 
-  const addOrEdit = (obj) => {
+  //Add review to firebase when called on hndleSubmit
+  const addReview = (obj) => {
     firebaseDB.child("restaurants").push(obj, (err) => {
       setRestaurant(review.restaurant);
       if (err) {
@@ -63,13 +101,15 @@ const ReviewCard = () => {
     console.log("Sent to firebase " + obj);
   };
 
+  //Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     setSearchVal(review.restaurant.toLowerCase());
-    addOrEdit(review);
-    console.log(review);
-    setModalOpen(false);
 
+    addReview(review);
+    //close form on submission
+    setModalOpen(false);
+    //Reset Review on form submission
     setReview({
       restaurant: "",
       name: "",
@@ -78,18 +118,14 @@ const ReviewCard = () => {
     });
   };
 
+  //Capitalize first char of string
   const Capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
   return (
-    <div>
-      {showCar ? (
-        <span>
-          Check out what everyone's saying about <br />{" "}
-          <strong>{Capitalize(restaurant)}</strong>
-        </span>
-      ) : (
+    <div style={CONTAINER_STYLE}>
+      {!showCar ? (
         <Modal
           trigger={
             <Button
@@ -99,14 +135,14 @@ const ReviewCard = () => {
               }}
               onClick={() => setModalOpen(true)}
             >
-              Leave A Review
+              <Icon name="write"></Icon>Leave A Review
             </Button>
           }
           open={modalOpen}
         >
           <Modal.Header>How Was Your Experience</Modal.Header>
           <Modal.Content>
-            <Form onSubmit={handleSubmit} autoComplete="off">
+            <Form onSubmit={handleSubmit} autoComplete="off" required>
               <Form.Field>
                 <label>Restaurant</label>
                 <Autocomplete
@@ -142,25 +178,36 @@ const ReviewCard = () => {
                 onChange={handleInputsVals}
                 required
               />
-              <Rating
-                maxRating={5}
-                defaultRating={0}
-                icon="star"
-                size="massive"
-                value={review.rating}
-                onRate={(e, { rating }) =>
-                  setReview({ ...review, rating: rating })
-                }
-                required
-              />
+              <Form.Field required>
+                <label>Rate Your Experience</label>
+                <Rating
+                  name="rating"
+                  maxRating={5}
+                  defaultRating={0}
+                  icon="star"
+                  size="massive"
+                  value={review.rating}
+                  onRate={(e, { rating }) =>
+                    setReview({ ...review, rating: rating })
+                  }
+                  required
+                />
+              </Form.Field>
               <Form.TextArea
                 name="comment"
                 label="Comment"
                 value={review.comment || ""}
-                onChange={handleInputsVals}
-                placeholder="Give us a short description of your experience"
+                onChange={(e) => {
+                  handleInputsVals(e);
+                  setCharLeft(150 - e.target.value.length);
+                }}
+                placeholder="How was your experience?"
                 required
+                maxLength="150"
               />
+              <Form.Field>
+                <em>{charLeft}/150</em>
+              </Form.Field>
               <div style={{ display: "flex" }}>
                 <Form.Button primary type="submit" value="Send it">
                   <Icon name="paper plane outline"></Icon>Send it
@@ -172,32 +219,30 @@ const ReviewCard = () => {
             </Form>
           </Modal.Content>
         </Modal>
+      ) : (
+        <span>
+          Thank You!
+          <br />
+          Check out what everyone's saying about <br />{" "}
+          <strong>{Capitalize(restaurant)}</strong>
+        </span>
       )}
+      {
+        //Carousel displays if true
+      }
       {showCar ? (
-        <div
-          style={{
-            display: "flex",
-            position: "absolute",
-            bottom: "40px",
-            right: "50%",
-          }}
-        >
+        <div style={CAROUSEL_STYLE}>
           <ReactCardCarousel
             autoplay={true}
             autoplay_speed={4000}
             spread="narrow"
           >
+            {
+              //Display every review returned
+            }
             {Object.keys(getReview).map((id) => {
               return (
-                <Card
-                  key={id}
-                  style={{
-                    width: "20rem",
-                    height: "10rem",
-                    fontSize: "1rem",
-                    background: "rgb(235, 235, 235)",
-                  }}
-                >
+                <Card key={id} style={CARD_STYLE}>
                   <Card.Content>
                     <Card.Header>
                       {Capitalize(
@@ -208,15 +253,23 @@ const ReviewCard = () => {
                           .toString()
                       )}
                     </Card.Header>
-                    <Card.Meta>
-                      <Rating
-                        defaultRating={getReview[id].rating || ""}
-                        maxRating={5}
-                        disabled
-                        icon="star"
-                        size="mini"
-                      />
-                    </Card.Meta>
+                    {getReview[id].rating == null ? (
+                      <Card.Meta>
+                        <span>
+                          <em>No Rating</em>
+                        </span>
+                      </Card.Meta>
+                    ) : (
+                      <Card.Meta>
+                        <Rating
+                          defaultRating={getReview[id].rating || ""}
+                          maxRating={5}
+                          disabled
+                          icon="star"
+                          size="mini"
+                        />
+                      </Card.Meta>
+                    )}
                     <Card.Description>
                       <em>"{Capitalize(getReview[id].comment)}"</em>
                     </Card.Description>

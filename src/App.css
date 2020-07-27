@@ -1,6 +1,6 @@
 .App {
   display: grid;
-  grid-template-rows: 1fr 3fr 2fr;
+  grid-template-rows: 0.75fr 2fr 2fr 0.25fr;
   height: 100vh;
   text-align: center;
   background: rgb(64, 51, 103);
@@ -12,9 +12,13 @@
   color: rgb(235, 235, 235);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.app-logo {
+  color: rgb(235, 235, 235);
+  margin: 2rem 0 0 2rem;
+}
+
+.sub-header {
+  color: rgb(235, 235, 235);
 }
 
 .App-header {
