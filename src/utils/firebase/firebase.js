@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 
 var firebaseConfig = {
-  apiKey: "AIzaSyA14gcTLyZMaGbWtLLQij4PLRMEKlu7dcE",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "whattotip-57d7c.firebaseapp.com",
   databaseURL: "https://whattotip-57d7c.firebaseio.com",
   projectId: "whattotip-57d7c",

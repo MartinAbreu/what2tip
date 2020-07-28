@@ -2,6 +2,7 @@
   display: grid;
   grid-template-rows: 0.75fr 2fr 2fr 0.25fr;
   height: 100vh;
+  min-height: 710px;
   text-align: center;
   background: rgb(64, 51, 103);
   background: radial-gradient(

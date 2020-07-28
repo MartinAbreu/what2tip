@@ -53,7 +53,7 @@ const CalculateTip = ({ ratingSent }) => {
 
   return (
     <div style={CONTAINER_STYLE}>
-      <CountUp end={Math.round(tip)} prefix="$" style={{ fontSize: "6rem" }} />
+      <CountUp end={Math.round(tip)} prefix="$" style={{ fontSize: "5rem" }} />
 
       <span style={{ marginTop: "10px" }}>
         Recommended Tip <em>({tipPerc * 100}%)</em>

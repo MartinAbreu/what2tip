@@ -3,18 +3,9 @@ import Autocomplete from "react-google-autocomplete";
 import "@brainhubeu/react-carousel/lib/style.css";
 import ReactCardCarousel from "react-card-carousel";
 
-import {
-  Button,
-  Form,
-  Modal,
-  Icon,
-  Rating,
-  Card,
-  Label,
-} from "semantic-ui-react";
+import { Button, Form, Modal, Icon, Rating, Card } from "semantic-ui-react";
 
 import firebaseDB from "../../utils/firebase/firebase";
-import { Input } from "@material-ui/core";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -26,6 +17,7 @@ const ReviewCard = () => {
   var [modalOpen, setModalOpen] = useState(false);
   var [showCar, setShowCar] = useState(false);
   var [charLeft, setCharLeft] = useState(150);
+  var [name, setName] = useState("");
 
   //Some styling
   const CONTAINER_STYLE = {
@@ -105,6 +97,7 @@ const ReviewCard = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setSearchVal(review.restaurant.toLowerCase());
+    setName(review.name);
 
     addReview(review);
     //close form on submission
@@ -221,7 +214,7 @@ const ReviewCard = () => {
         </Modal>
       ) : (
         <span>
-          Thank You!
+          Thank You {name}!
           <br />
           Check out what everyone's saying about <br />{" "}
           <strong>{Capitalize(restaurant)}</strong>
